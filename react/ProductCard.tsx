@@ -34,8 +34,34 @@ const ProductCard = ({
     console.log("isActive: ");
   }, []);
 
+  const goToUrl = (newTab = false) => {
+    if (!url) return;
+    if (newTab) {
+      window.open(url, "_blank");
+    } else {
+      window.location.assign(url);
+    }
+  };
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // El link "Comprar" ya navega por sí mismo
+    if ((e.target as HTMLElement).closest("a")) return;
+    goToUrl(e.metaKey || e.ctrlKey);
+  };
+
+  const handleCardKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget && e.key === "Enter") goToUrl();
+  };
+
   return (
-    <div className={handles.productContainer}>
+    <div
+      className={handles.productContainer}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      role="link"
+      tabIndex={0}
+      style={{ cursor: url ? "pointer" : undefined }}
+    >
       <div className={handles.productContextText}>
         <p className={handles.productText}>
           {brand && <span className={handles.productbrand}>{brand}</span>}
